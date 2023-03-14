@@ -44,6 +44,7 @@ using SQLite, update the `DB_CONNECTION` to sqlite and set the `DB_DATABASE` to 
 example:
 
 📝 Notes: Even if you don't set the `DB_DATABASE` to sqlite, the CLI will ask you and does things for you.
+But make sure you give the absolute path if you see any errors.
 
 ```js
 DB_CONNECTION = sqlite
