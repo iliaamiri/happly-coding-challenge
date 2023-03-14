@@ -83,6 +83,12 @@ Your application should now be running at http://localhost:8000.
 php artisan inertia:start-ssr
 ```
 
+### 9. Run the tests
+
+```bash
+php artisan test
+```
+
 📝 Note: No unit tests were written for this app.
 
 ## Troubleshooting
