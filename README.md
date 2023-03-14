@@ -43,6 +43,8 @@ Create a new .env file by duplicating the .env.example file and updating the val
 using SQLite, update the `DB_CONNECTION` to sqlite and set the `DB_DATABASE` to an absolute path to the SQLite file, for
 example:
 
+📝 Notes: Even if you don't set the `DB_DATABASE` to sqlite, the CLI will ask you and does things for you.
+
 ```js
 DB_CONNECTION = sqlite
 DB_DATABASE = /absolute/path/to/database.sqlite
