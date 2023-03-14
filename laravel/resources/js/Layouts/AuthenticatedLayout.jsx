@@ -4,9 +4,39 @@ import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/react';
+import {useAuth} from "@/hooks/useAuth";
+import {Loading} from "@/Components/Loading";
 
-export default function Authenticated({ auth, header, children }) {
+export default function Authenticated({ header, children }) {
+    const {isFinished, user} = useAuth();
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
+
+    if (!isFinished) {
+        return <Loading />;
+    }
+
+    if (!user) {
+        window.location.href = '/login';
+        return
+    }
+
+    const handleLogout = async () => {
+        try {
+            const response = await fetch('/api/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('laravel_access_token')}`,
+                },
+            });
+            const result = await response.json();
+            localStorage.removeItem('laravel_access_token');
+            window.location.href = '/';
+        } catch (e) {
+            console.error(e);
+        }
+    }
 
     return (
         <div className="min-h-screen bg-gray-100">
@@ -36,7 +66,7 @@ export default function Authenticated({ auth, header, children }) {
                                                 type="button"
                                                 className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
                                             >
-                                                {auth.user.name}
+                                                {user.name}
 
                                                 <svg
                                                     className="ml-2 -mr-0.5 h-4 w-4"
@@ -55,10 +85,10 @@ export default function Authenticated({ auth, header, children }) {
                                     </Dropdown.Trigger>
 
                                     <Dropdown.Content>
-                                        <Dropdown.Link href={route('profile.edit')}>Profile</Dropdown.Link>
-                                        <Dropdown.Link href={route('logout')} method="post" as="button">
+                                        <button type="button" onClick={handleLogout}
+                                                className="text-white ml-4 bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
                                             Log Out
-                                        </Dropdown.Link>
+                                        </button>
                                     </Dropdown.Content>
                                 </Dropdown>
                             </div>
@@ -100,9 +130,9 @@ export default function Authenticated({ auth, header, children }) {
                     <div className="pt-4 pb-1 border-t border-gray-200">
                         <div className="px-4">
                             <div className="font-medium text-base text-gray-800">
-                                {auth.user.name}
+                                {user.name}
                             </div>
-                            <div className="font-medium text-sm text-gray-500">{auth.user.email}</div>
+                            <div className="font-medium text-sm text-gray-500">{user.email}</div>
                         </div>
 
                         <div className="mt-3 space-y-1">

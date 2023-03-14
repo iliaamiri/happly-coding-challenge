@@ -5,7 +5,9 @@ import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
-import { Head, Link, useForm } from '@inertiajs/react';
+import {Head, Link, router, useForm} from '@inertiajs/react';
+import {useAuth} from "@/hooks/useAuth";
+import {Loading} from "@/Components/Loading";
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -20,14 +22,44 @@ export default function Login({ status, canResetPassword }) {
         };
     }, []);
 
+    const {isFinished, user} = useAuth();
+
+    if (!isFinished) {
+        return <Loading />;
+    }
+
+    if (user) {
+        window.location.href = '/dashboard';
+        return;
+    }
+
     const handleOnChange = (event) => {
         setData(event.target.name, event.target.type === 'checkbox' ? event.target.checked : event.target.value);
     };
 
-    const submit = (e) => {
+    const submit = async (e) => {
         e.preventDefault();
 
-        post(route('login'));
+        try {
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: data.email,
+                    password: data.password,
+                })
+            });
+            const result = await response.json();
+            console.log('result: ', result)
+            localStorage.setItem('laravel_access_token', result.token);
+            window.location.href = '/dashboard';
+        } catch (e) {
+            console.error(e);
+        }
+
     };
 
     return (

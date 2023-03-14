@@ -5,8 +5,20 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { Head, useForm } from '@inertiajs/react';
+import {useAuth} from "@/hooks/useAuth";
+import {Loading} from "@/Components/Loading";
 
 export default function ResetPassword({ token, email }) {
+    const { isFinished, user } = useAuth();
+
+    if (!isFinished) {
+        return <Loading />;
+    }
+    if (user) {
+        window.location.href = '/dashboard';
+        return;
+    }
+
     const { data, setData, post, processing, errors, reset } = useForm({
         token: token,
         email: email,

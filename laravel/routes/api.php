@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CustomAuthController;
+use App\Http\Controllers\QuoteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +19,9 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post('/login', [CustomAuthController::class, 'loginUser']);
+Route::post('/register', [CustomAuthController::class, 'createUser']);
+Route::post('/logout', [CustomAuthController::class, 'logoutUser']);
+
+Route::middleware('auth:sanctum')->get('/newQuote', [QuoteController::class, 'index']);

@@ -2,9 +2,24 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import {Head} from '@inertiajs/react';
 import {useEffect, useState} from "react";
 
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
 const fetchNewKanyeQuote = async () => { // Promise <null | string>
     try {
-        const response = await fetch('https://api.kanye.rest');
+        const response = await fetch(
+            '/api/newQuote', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': getCookie('XSRF-TOKEN'),
+                    'Authorization': `Bearer ${localStorage.getItem('laravel_access_token')}`,
+                },
+            });
         const data = await response.json();
         return data.quote;
     } catch (e) {

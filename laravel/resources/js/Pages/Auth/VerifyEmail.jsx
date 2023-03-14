@@ -1,8 +1,20 @@
 import GuestLayout from '@/Layouts/GuestLayout';
 import PrimaryButton from '@/Components/PrimaryButton';
 import { Head, Link, useForm } from '@inertiajs/react';
+import {useAuth} from "@/hooks/useAuth";
+import {Loading} from "@/Components/Loading";
 
 export default function VerifyEmail({ status }) {
+    const { isFinished, user } = useAuth();
+
+    if (!isFinished) {
+        return <Loading />;
+    }
+    if (user) {
+        window.location.href = '/dashboard';
+        return;
+    }
+
     const { post, processing } = useForm({});
 
     const submit = (e) => {
