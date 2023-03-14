@@ -44,7 +44,7 @@ example:
 
 ```js
 DB_CONNECTION = sqlite
-DB_DATABASE = /absolute/path /to/database.sqlite
+DB_DATABASE = /absolute/path/to/database.sqlite
 ```
 
 ### 4. Generate a new application key by running:
