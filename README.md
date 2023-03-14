@@ -27,6 +27,7 @@ It's a simple app that shows you Kanye West quotes randomly and lets you update 
 
 ```bash
 git clone https://github.com/Mindful-Connect/happly-laravel-challenge
+cd happly-laravel-challenge
 ```
 
 ### 2. Install dependencies
